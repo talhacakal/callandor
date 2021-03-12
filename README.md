@@ -1,4 +1,4 @@
-# callandor
+# Callandor
 
 Callandor is a translation and note application.
 
