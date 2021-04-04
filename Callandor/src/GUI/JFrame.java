@@ -3,7 +3,6 @@ package GUI;
 import Connection.*;
 import Languages.*;
 import java.awt.Color;
-import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -14,7 +13,6 @@ import java.io.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Timer;
@@ -28,13 +26,9 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 public class JFrame extends javax.swing.JFrame {
-    
-    SQLite lite = null;
+    Methods methods=new Methods();
     IDataBase database = null;
     ILanguages language = null;
     DefaultTableModel model;
@@ -43,12 +37,10 @@ public class JFrame extends javax.swing.JFrame {
     
     int index = 0;
     boolean rowSelect = false;
-    
     private MouseEvent Click;
     
     public JFrame() {
         initComponents();
-        
         try {
             whileStarting();
         } catch (Exception ex) {
@@ -178,6 +170,21 @@ public class JFrame extends javax.swing.JFrame {
         lbl_settingsAlert = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         jComboLanguage = new javax.swing.JComboBox<>();
+        panel_detail = new javax.swing.JPanel();
+        exitDetails = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        panelDeatilPane = new javax.swing.JEditorPane();
+        jLabel21 = new javax.swing.JLabel();
+        panelDeatilEnglish = new javax.swing.JTextField();
+        jLabel22 = new javax.swing.JLabel();
+        btnDelete = new javax.swing.JPanel();
+        jLabel24 = new javax.swing.JLabel();
+        btnSave = new javax.swing.JPanel();
+        jLabel25 = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        detailAlert = new javax.swing.JEditorPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Callandor");
@@ -479,10 +486,10 @@ public class JFrame extends javax.swing.JFrame {
                 btn_saveMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btn_saveMouseEntered(evt);
+                mouseEnteredOperationButtons(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btn_saveMouseExited(evt);
+                mouseExitedOperationButtons(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 buttonsPressed(evt);
@@ -509,10 +516,10 @@ public class JFrame extends javax.swing.JFrame {
                 btn_translateMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btn_translateMouseEntered(evt);
+                mouseEnteredOperationButtons(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btn_translateMouseExited(evt);
+                mouseExitedOperationButtons(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 buttonsPressed(evt);
@@ -674,10 +681,10 @@ public class JFrame extends javax.swing.JFrame {
                 btn_refreshMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                showButonEntered(evt);
+                mouseEnteredOperationButtons(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                showButtonExited(evt);
+                mouseExitedOperationButtons(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 buttonsPressed(evt);
@@ -709,10 +716,10 @@ public class JFrame extends javax.swing.JFrame {
                 btn_deleteMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                showButonEntered(evt);
+                mouseEnteredOperationButtons(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                showButtonExited(evt);
+                mouseExitedOperationButtons(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 buttonsPressed(evt);
@@ -744,10 +751,10 @@ public class JFrame extends javax.swing.JFrame {
                 btn_addToMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                showButonEntered(evt);
+                mouseEnteredOperationButtons(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                showButtonExited(evt);
+                mouseExitedOperationButtons(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 buttonsPressed(evt);
@@ -814,10 +821,10 @@ public class JFrame extends javax.swing.JFrame {
                 btn_updateMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                showButonEntered(evt);
+                mouseEnteredOperationButtons(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                showButtonExited(evt);
+                mouseExitedOperationButtons(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 buttonsPressed(evt);
@@ -1270,6 +1277,138 @@ public class JFrame extends javax.swing.JFrame {
 
         panel_center.add(panel_settings, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 880, 530));
 
+        exitDetails.setIcon(new javax.swing.ImageIcon("src/images/icon_exit.png"));
+        exitDetails.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                exitMouseClicked(evt);
+            }
+        });
+
+        jPanel3.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        panelDeatilPane.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jScrollPane2.setViewportView(panelDeatilPane);
+
+        jPanel3.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 120, 530, 190));
+
+        jLabel21.setText("English");
+        jPanel3.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 80, 40));
+        jPanel3.add(panelDeatilEnglish, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 40, 530, 40));
+        jPanel3.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 80, 40));
+
+        btnDelete.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnDelete.setToolTipText("You can use \"R\" key in the table.");
+        btnDelete.setPreferredSize(new java.awt.Dimension(102, 36));
+        btnDelete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnDeleteMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                mouseEnteredOperationButtons(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                mouseExitedOperationButtons(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                buttonsPressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                buttonsReleased(evt);
+            }
+        });
+
+        jLabel24.setText("           Delete");
+
+        javax.swing.GroupLayout btnDeleteLayout = new javax.swing.GroupLayout(btnDelete);
+        btnDelete.setLayout(btnDeleteLayout);
+        btnDeleteLayout.setHorizontalGroup(
+            btnDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel24, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+        );
+        btnDeleteLayout.setVerticalGroup(
+            btnDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel24, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+        );
+
+        jPanel3.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 340, -1, -1));
+
+        btnSave.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnSave.setToolTipText("You can use \"R\" key in the table.");
+        btnSave.setPreferredSize(new java.awt.Dimension(102, 36));
+        btnSave.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSaveMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                mouseEnteredOperationButtons(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                mouseExitedOperationButtons(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                buttonsPressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                buttonsReleased(evt);
+            }
+        });
+
+        jLabel25.setText("            Save");
+
+        javax.swing.GroupLayout btnSaveLayout = new javax.swing.GroupLayout(btnSave);
+        btnSave.setLayout(btnSaveLayout);
+        btnSaveLayout.setHorizontalGroup(
+            btnSaveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel25, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+        );
+        btnSaveLayout.setVerticalGroup(
+            btnSaveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel25, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+        );
+
+        jPanel3.add(btnSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 340, -1, -1));
+
+        detailAlert.setEditable(false);
+        jScrollPane4.setViewportView(detailAlert);
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+        );
+
+        jPanel3.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 330, 250, 80));
+
+        javax.swing.GroupLayout panel_detailLayout = new javax.swing.GroupLayout(panel_detail);
+        panel_detail.setLayout(panel_detailLayout);
+        panel_detailLayout.setHorizontalGroup(
+            panel_detailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_detailLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(exitDetails, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(panel_detailLayout.createSequentialGroup()
+                .addGap(79, 79, 79)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 739, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(62, Short.MAX_VALUE))
+        );
+        panel_detailLayout.setVerticalGroup(
+            panel_detailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_detailLayout.createSequentialGroup()
+                .addComponent(exitDetails, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 445, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(34, Short.MAX_VALUE))
+        );
+
+        panel_center.add(panel_detail, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 880, 530));
+        panel_detail.setVisible(false);
+
         bg.add(panel_center, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 170, 880, 530));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1299,38 +1438,28 @@ public class JFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_dragMouseDragged
 
     private void exitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exitMouseClicked
-        BufferedReader read = null;
-        BufferedWriter write = null;
-        ArrayList list = new ArrayList();
-        try {
-            read = new BufferedReader(new FileReader("commands/config.txt"));
-            list.add(read.readLine());
-            list.add(read.readLine());
-            list.add(read.readLine());
+        if (evt.getSource() == exit) {
+            int x = (evt.getXOnScreen() - 1160 - evt.getX());
+            methods.setValue("xx", String.valueOf(x));
 
-            list.set(1, evt.getXOnScreen() - 1160 - evt.getX());
-            list.set(2, evt.getYOnScreen() - evt.getY());
+            int y = (evt.getYOnScreen() - evt.getY());
+            methods.setValue("yy", String.valueOf(y));
 
-            write = new BufferedWriter(new FileWriter("commands/config.txt"));
-            write.write(String.valueOf(list.get(0) + "\n"));
-            write.write(String.valueOf(list.get(1) + "\n"));
-            write.write(String.valueOf(list.get(2) + "\n"));
-
-            write.close();
-            read.close();
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+            System.exit(0);
+        }else if(evt.getSource() == exitDetails){
+            panel_detail.setVisible(false);
+            panel_show.setVisible(true);
         }
-
-        System.exit(0);
     }//GEN-LAST:event_exitMouseClicked
 
     private void mouseExitedSide(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseExitedSide
-        resetColor((JPanel) evt.getSource());
+        //(64, 43, 100)
+        methods.resetColor((JPanel) evt.getSource(),64,43,100);
     }//GEN-LAST:event_mouseExitedSide
 
     private void mouseEnterSide(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseEnterSide
-        setColor((JPanel) evt.getSource());
+        //(85, 65, 118)
+        methods.setColor((JPanel) evt.getSource(),85,65,118);
     }//GEN-LAST:event_mouseEnterSide
 
     private void mouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseClicked
@@ -1339,6 +1468,7 @@ public class JFrame extends javax.swing.JFrame {
             panel_show.setVisible(false);
             panel_daily.setVisible(false);
             panel_settings.setVisible(false);
+            panel_detail.setVisible(false);
             
             text_english.requestFocusInWindow();
         } else if (evt.getSource() == btn_show) {
@@ -1346,23 +1476,23 @@ public class JFrame extends javax.swing.JFrame {
             panel_show.setVisible(true);
             panel_daily.setVisible(false);
             panel_settings.setVisible(false);
+            panel_detail.setVisible(false);
             
         } else if (evt.getSource() == btn_daily) {
             panel_add.setVisible(false);
             panel_show.setVisible(false);
             panel_daily.setVisible(true);
             panel_settings.setVisible(false);
+            panel_detail.setVisible(false);
             
             new Thread() {
                 @Override
                 public void run() {
-                    getDate();
                     try {
+                        getDate();
                         dailyWords();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(JFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IOException ex) {
-                        Logger.getLogger(JFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
                     }
                 }
             }.start();
@@ -1372,6 +1502,7 @@ public class JFrame extends javax.swing.JFrame {
             panel_show.setVisible(false);
             panel_daily.setVisible(false);
             panel_settings.setVisible(true);
+            panel_detail.setVisible(false);
             lbl_settingsAlert.setText("");
             
             if (database instanceof MySQL) {
@@ -1379,16 +1510,11 @@ public class JFrame extends javax.swing.JFrame {
                 radio_SQLite.setSelected(false);
                 pnl_MySQLSettings.setVisible(true);
                 
-                try {
-                    Scanner readMySQL = new Scanner(new File("commands/components.txt"));
-                    txt_mysqlHost.setText(readMySQL.nextLine());
-                    txt_mysqlPort.setText(readMySQL.nextLine());
-                    txt_mysqlUsername.setText(readMySQL.nextLine());
-                    txt_mysqlPassword.setText(readMySQL.nextLine());
-                    readMySQL.close();
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(JFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                txt_mysqlHost.setText(methods.getValue("MySQL.Host"));
+                txt_mysqlPort.setText(methods.getValue("MySQL.Port"));
+                txt_mysqlUsername.setText(methods.getValue("MySQL.Username"));
+                txt_mysqlPassword.setText(methods.getValue("MySQL.Password"));
+                
                 
             } else {
                 radio_MySQL.setSelected(false);
@@ -1399,35 +1525,15 @@ public class JFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_mouseClicked
 
-    private void btn_saveMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_saveMouseEntered
-        btn_save.setBackground(new Color(153, 153, 153));
-    }//GEN-LAST:event_btn_saveMouseEntered
-
-    private void btn_saveMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_saveMouseExited
-        btn_save.setBackground(new Color(204, 204, 204));
-    }//GEN-LAST:event_btn_saveMouseExited
-
-    private void showButonEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showButonEntered
-        ((JPanel) evt.getSource()).setBackground(new Color(153, 153, 153));
-    }//GEN-LAST:event_showButonEntered
-
-    private void showButtonExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showButtonExited
-        ((JPanel) evt.getSource()).setBackground(new Color(240, 240, 240));
-    }//GEN-LAST:event_showButtonExited
-
     private void panel_add_textEnglishKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_panel_add_textEnglishKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (text_english.getText().equals("callandor") == true || text_english.getText().equals("Callandor") == true) {
-                text_mainlanguage.requestFocusInWindow();
-                String text = "This word is name of a sword in the wheel of time series.";
-                jTranslateText.setText(text);
-            } else if (text_english.getText().length() == 0) {
-                lbl_alert.setText("It cannot be empty.");
-                text_english.requestFocusInWindow();
-            } else {
-                text_mainlanguage.requestFocusInWindow();
-                btn_translateMouseClicked(Click);
-            }
+            new Thread() {
+                public void run() {
+                    String english = text_english.getText();
+                    jTranslateText.setText(language.translate(english));
+                }
+            }.start();
+            text_mainlanguage.requestFocusInWindow();
         }
     }//GEN-LAST:event_panel_add_textEnglishKeyPressed
 
@@ -1439,8 +1545,6 @@ public class JFrame extends javax.swing.JFrame {
 
     private void btn_saveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_saveMouseClicked
         panel_add_textAlert();
-        
-
     }//GEN-LAST:event_btn_saveMouseClicked
 
     private void table_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_listMouseClicked
@@ -1451,7 +1555,14 @@ public class JFrame extends javax.swing.JFrame {
         txt_english.setText(model.getValueAt(table_list.getSelectedRow(), 1).toString());
         txt_ML.setText(model.getValueAt(table_list.getSelectedRow(), 2).toString());
         lbl_date.setText(model.getValueAt(table_list.getSelectedRow(), 3).toString());
-
+        
+        if (evt.getClickCount() == 2) {
+            panel_detail.setVisible(true);
+            panel_show.setVisible(false);
+            
+            panelDeatilEnglish.setText(model.getValueAt(table_list.getSelectedRow(), 1).toString());
+            panelDeatilPane.setText(model.getValueAt(table_list.getSelectedRow(), 2).toString());
+        }
     }//GEN-LAST:event_table_listMouseClicked
 
     private void btn_refreshMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_refreshMouseClicked
@@ -1469,9 +1580,11 @@ public class JFrame extends javax.swing.JFrame {
         if (selectedTable == "Words") {
             lbl_addTo.setText("Add Learned");
             btn_addTo.setVisible(true);
-            resetUpdateElements();
+            txt_english.setText("");
+            txt_ML.setText("");
+            lbl_id.setText("");
             Refresh();
-            
+
             if (selectedProcess == "Update") {
                 pnl_update.setVisible(true);
             }
@@ -1479,9 +1592,11 @@ public class JFrame extends javax.swing.JFrame {
         } else if (selectedTable == "Learned") {
             lbl_addTo.setText("Add Words");
             btn_addTo.setVisible(true);
-            resetUpdateElements();
+            txt_english.setText("");
+            txt_ML.setText("");
+            lbl_id.setText("");
             Refresh();
-            
+
             if (selectedProcess == "Update") {
                 pnl_update.setVisible(true);
             }
@@ -1489,7 +1604,9 @@ public class JFrame extends javax.swing.JFrame {
         } else if (selectedTable == "Forgot Date") {
             btn_addTo.setVisible(false);
             pnl_update.setVisible(false);
-            resetUpdateElements();
+            txt_english.setText("");
+            txt_ML.setText("");
+            lbl_id.setText("");
             Refresh();
             lbl_showAlert.setText("");
         }
@@ -1609,7 +1726,6 @@ public class JFrame extends javax.swing.JFrame {
             }
         };
         myTimer.schedule(alert, 1000);
-
     }//GEN-LAST:event_btn_updateMouseClicked
 
     private void txt_englishKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_englishKeyPressed
@@ -1677,7 +1793,6 @@ public class JFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_searchKeyReleased
 
     private void lbl_dailyMouseClickeds(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_dailyMouseClickeds
-        
         String message = ((JLabel) evt.getSource()).getText();
         StringSelection selection = new StringSelection(message);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -1688,27 +1803,10 @@ public class JFrame extends javax.swing.JFrame {
         pnl_MySQLSettings.setVisible(true);
         panel_settings.add(btn_apply, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 300, -1, -1));
         
-        Scanner read = null;
-        File file = new File("commands/components.txt");
-        try {
-            if (file.exists() == false) {
-                file.createNewFile();
-            }
-            read = new Scanner(new File("commands/components.txt"));
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(JFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(JFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        if (read.hasNext() == true) {
-            txt_mysqlHost.setText(read.next());
-            txt_mysqlPort.setText(read.next());
-            txt_mysqlUsername.setText(read.next());
-            txt_mysqlPassword.setText(read.next());
-        }
-        
-
+        txt_mysqlHost.setText(methods.getValue("MySQL.Host"));
+        txt_mysqlPort.setText(methods.getValue("MySQL.Port"));
+        txt_mysqlUsername.setText(methods.getValue("MySQL.Username"));
+        txt_mysqlPassword.setText(methods.getValue("MySQL.Password"));
     }//GEN-LAST:event_radio_MySQLActionPerformed
 
     private void radio_SQLiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radio_SQLiteActionPerformed
@@ -1721,7 +1819,7 @@ public class JFrame extends javax.swing.JFrame {
         txt_mysqlPassword.setBorder(new LineBorder(Color.black));
         txt_mysqlHost.setBorder(new LineBorder(Color.black));
         txt_mysqlPort.setBorder(new LineBorder(Color.black));
-        
+
         if (txt_mysqlUsername.getText().length() == 0) {
             txt_mysqlUsername.setBorder(new LineBorder(Color.red));
             txt_mysqlUsername.requestFocusInWindow();
@@ -1735,62 +1833,45 @@ public class JFrame extends javax.swing.JFrame {
             txt_mysqlPort.setBorder(new LineBorder(Color.red));
             txt_mysqlPort.requestFocusInWindow();
         } else {
-            new Thread() {
-                @Override
-                public void run() {
-                    if (selected == "MySQL") {
-                        MySQL m = new MySQL();
-                        BufferedWriter writer = null;
-                        if (m.isValid(txt_mysqlHost.getText(), txt_mysqlPort.getText(), txt_mysqlUsername.getText(), txt_mysqlPassword.getText()) == false) {
-                            lbl_settingsAlert.setText("Check pls");
-                        } else {
-                            try {
-                                m.Create(txt_mysqlHost.getText(), txt_mysqlPort.getText(), txt_mysqlUsername.getText(), txt_mysqlPassword.getText());
-                                m.createTables(txt_mysqlHost.getText(), txt_mysqlPort.getText(), txt_mysqlUsername.getText(), txt_mysqlPassword.getText());
-                                writer = new BufferedWriter(new FileWriter("commands/whileStarting.txt"));
-                                writer.write("MySQL \n");
-                                
-                                writer.close();
-                                lbl_settingsAlert.setText("Done!");
-                            } catch (SQLException ex) {
-                                lbl_settingsAlert.setText(ex.getMessage());
-                            } catch (Exception ex) {
-                                System.out.println(ex.getMessage());
-                                lbl_settingsAlert.setText(ex.getMessage());
-                            }
-                            
-                            database = new MySQL();
-                        }
-                        
-                    } else if (selected == "SQLite") {
-                        BufferedWriter writer = null;
-                        try {
-                            File file = new File("DataBase/english.db");
-                            if (file.exists() == false) {
-                                new SQLite().CreateTables();
-                            }
-                            
-                            database = new SQLite();
-                            
-                            writer = new BufferedWriter(new FileWriter("commands/whileStarting.txt"));
-                            writer.write("SQLite \n");
-                            
-                            writer.close();
-                            
-                        } catch (IOException ex) {
-                            Logger.getLogger(JFrame.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (SQLException ex) {
-                            Logger.getLogger(JFrame.class.getName()).log(Level.SEVERE, null, ex);
-                            
-                        }
+            if (selected == "MySQL") {
+                MySQL m = new MySQL();
+                if (m.isValid(txt_mysqlHost.getText(), txt_mysqlPort.getText(), txt_mysqlUsername.getText(), txt_mysqlPassword.getText()) == false) {
+                    lbl_settingsAlert.setText("Check pls");
+                } else {
+                    try {
+                        m.createTables(txt_mysqlHost.getText(), txt_mysqlPort.getText(), txt_mysqlUsername.getText(), txt_mysqlPassword.getText());
+
+                        methods.setValue("database", "MySQL");
+                        methods.setValue("MySQL.Host", txt_mysqlHost.getText());
+                        methods.setValue("MySQL.Port", txt_mysqlPort.getText());
+                        methods.setValue("MySQL.Username", txt_mysqlUsername.getText());
+                        methods.setValue("MySQL.Password", txt_mysqlPassword.getText());
+
+                        lbl_settingsAlert.setText("Done!");
+                    } catch (Exception ex) {
+                        lbl_settingsAlert.setText(ex.getMessage());
                     }
+
+                    database = new MySQL();
                 }
-            }.start();
+
+            } else if (selected == "SQLite") {
+                try {
+                    File file = new File("components/english.db");
+                    if (file.exists() == false) {
+                        new SQLite().CreateTables();
+                    }
+
+                    database = new SQLite();
+                    methods.setValue("database", "SQLite");
+
+                } catch (Exception ex) {
+                    lbl_settingsAlert.setText(ex.getMessage());
+                }
+            }
             System.out.println(selected);
-            new File("commands/daily/words.txt").delete();
-            new File("commands/daily/components.txt").delete();
         }
-        
+
         String select = jComboLanguage.getSelectedItem().toString();
         System.out.println(select);
         if (select.equals("German") == true) {
@@ -1802,31 +1883,11 @@ public class JFrame extends javax.swing.JFrame {
         } else {
             language = new turkish();
         }
-        
+        methods.setValue("language", select);
+
         label_ML.setText(language.getText() + " :");
+        jLabel22.setText(language.getText() + " :");
         jLabel7.setText("   " + language.getText() + " :");
-        
-        BufferedReader read=null;
-        BufferedWriter write = null;
-        ArrayList list=new ArrayList();
-        try {
-            read=new BufferedReader(new FileReader("commands/config.txt"));
-            list.add(read.readLine());
-            list.add(read.readLine());
-            list.add(read.readLine());
-            
-            list.set(0, select);
-            
-            write = new BufferedWriter(new FileWriter("commands/config.txt"));
-            write.write(String.valueOf(list.get(0)+"\n"));
-            write.write(String.valueOf(list.get(1)+"\n"));
-            write.write(String.valueOf(list.get(2)+"\n"));
-            
-            write.close();
-            read.close();
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
 
     }//GEN-LAST:event_btn_applyMouseClicked
 
@@ -1879,8 +1940,6 @@ public class JFrame extends javax.swing.JFrame {
         } else if (evt.getKeyCode() == 83) {
             txt_search.requestFocusInWindow();
         }
-        
-
     }//GEN-LAST:event_table_listKeyPressed
 
     private void btn_applyMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_applyMousePressed
@@ -1912,6 +1971,10 @@ public class JFrame extends javax.swing.JFrame {
             btn_update.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         } else if (evt.getSource() == btn_translate) {
             btn_translate.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        } else if (evt.getSource() == btnDelete) {
+            btnDelete.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        } else if (evt.getSource() == btnSave) {
+            btnSave.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         }
 
     }//GEN-LAST:event_buttonsPressed
@@ -1937,56 +2000,19 @@ public class JFrame extends javax.swing.JFrame {
             btn_update.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         } else if (evt.getSource() == btn_translate) {
             btn_translate.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        } else if (evt.getSource() == btnDelete) {
+            btnDelete.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        } else if (evt.getSource() == btnSave) {
+            btnSave.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         }
 
     }//GEN-LAST:event_buttonsReleased
-
-    private void btn_translateMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_translateMouseEntered
-        btn_translate.setBackground(new Color(153, 153, 153));
-    }//GEN-LAST:event_btn_translateMouseEntered
-
-    private void btn_translateMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_translateMouseExited
-        btn_translate.setBackground(new Color(204, 204, 204));
-    }//GEN-LAST:event_btn_translateMouseExited
 
     private void btn_translateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_translateMouseClicked
         new Thread() {
             public void run() {
                 String english = text_english.getText();
-                String result = "";
-                try {
-                    Document doc = Jsoup.connect(language.getDictionaryUrl() + english + "").get();
-                    Elements element = doc.select("div.sense-block");
-                    
-                    if (text_english.getText().equals("callandor") == true || text_english.getText().equals("Callandor") == true) {
-                        text_mainlanguage.requestFocusInWindow();
-                        String text = "This word is name of a sword in the wheel of time series.";
-                        jTranslateText.setText(text);
-                        return;
-                    }
-                    
-                    if (element.size() == 0) {
-                        jTranslateText.setText("<b>No result</b>");
-                        return;
-                    }
-                    
-                    boolean first = false;
-                    for (int i = 0; i < element.size(); i++) {
-                        String header = element.get(i).select("span.sense-title").text();
-                        if (header.equals("") == false) {
-                            if (first == true) {
-                                result += "<br>";
-                            }
-                            result += "<b>" + header + "</b><br>";
-                            first = true;
-                        }
-                        result += element.get(i).select("span.trans").text() + "<br>";
-                    }
-                    jTranslateText.setText(result);
-                    
-                } catch (IOException ex) {
-                    System.out.println(ex.getMessage());
-                }
+                jTranslateText.setText(language.translate(english));
             }
         }.start();
         text_mainlanguage.requestFocusInWindow();
@@ -1999,6 +2025,83 @@ public class JFrame extends javax.swing.JFrame {
             txt_search.setText("");
         }
     }//GEN-LAST:event_txt_searchKeyPressed
+
+    private void mouseEnteredOperationButtons(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseEnteredOperationButtons
+        //(153,153,153)
+        methods.setColor((JPanel) evt.getSource(),153,153,153);
+    }//GEN-LAST:event_mouseEnteredOperationButtons
+
+    private void mouseExitedOperationButtons(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseExitedOperationButtons
+        //(204,204,204)
+        if(evt.getSource() == btn_save || evt.getSource() == btn_translate)
+            methods.resetColor((JPanel) evt.getSource(),204,204,204);
+        else
+            methods.resetColor((JPanel) evt.getSource(),240,240,240);
+            
+    }//GEN-LAST:event_mouseExitedOperationButtons
+
+    private void btnSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseClicked
+        if (panelDeatilEnglish.getText().length() == 0) {
+            detailAlert.setText("It cannot be empty.");
+            panelDeatilEnglish.requestFocusInWindow();
+        } else if (panelDeatilPane.getText().length() == 0) {
+            detailAlert.setText("It cannot be empty.");
+            panelDeatilPane.requestFocusInWindow();
+        }else {
+            update(panelDeatilEnglish.getText(), panelDeatilPane.getText(), Integer.parseInt(lbl_id.getText()));
+            panelDeatilEnglish.requestFocusInWindow();
+        }
+
+        Timer myTimer = new Timer();
+        TimerTask alert = new TimerTask() {
+            @Override
+            public void run() {
+                detailAlert.setText("");
+                myTimer.cancel();
+            }
+        };
+        myTimer.schedule(alert, 1000);
+    }//GEN-LAST:event_btnSaveMouseClicked
+
+    private void btnDeleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDeleteMouseClicked
+        if (lbl_id.getText().length() != 0) {
+            new Thread() {
+                public void run() {
+                    try {
+                        if (combo_table.getSelectedItem().toString() == "Words") {
+                            lbl_showAlert.setText(database.delete("words", Integer.parseInt(lbl_id.getText())));
+                        } else if (combo_table.getSelectedItem().toString() == "Learned") {
+                            lbl_showAlert.setText(database.delete("learned", Integer.parseInt(lbl_id.getText())));
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(JFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
+                        Timer myTimer = new Timer();
+                        TimerTask alert = new TimerTask() {
+                            @Override
+                            public void run() {
+                                detailAlert.setText("");
+                                myTimer.cancel();
+                            }
+                        };
+                        myTimer.schedule(alert, 1000);
+                    }
+
+                    index = table_list.getSelectedRow();
+                    rowSelect = true;
+                    Refresh();
+
+                    txt_english.setText("");
+                    txt_ML.setText("");
+                    lbl_id.setText("");
+                    lbl_date.setText("");
+                    panel_detail.setVisible(false);
+                    panel_show.setVisible(true);
+
+                }
+            }.start();
+        }
+    }//GEN-LAST:event_btnDeleteMouseClicked
     
     public static void main(String args[]) {
         try {
@@ -2011,23 +2114,6 @@ public class JFrame extends javax.swing.JFrame {
             System.out.println(e.getMessage());
         }
         
-    }
-    
-    IDataBase setDatabase(String database) throws IOException, SQLException {
-        
-        if (database == "MySQL") {
-            return new MySQL();
-        } else {
-            return new SQLite();
-        }
-    }
-    
-    void setColor(JPanel panel) {
-        panel.setBackground(new Color(85, 65, 118));
-    }
-    
-    void resetColor(JPanel panel) {
-        panel.setBackground(new Color(64, 43, 100));
     }
     
     void panel_add_textAlert() {
@@ -2096,13 +2182,11 @@ public class JFrame extends javax.swing.JFrame {
                 lbl_date.setText("");
             }
         }.start();
-        
+
     }
-    
+
     void List(ArrayList list, boolean forgotten_date) {
-        
         ArrayList<Words> words = list;
-        
         try {
             if (forgotten_date == true) {
                 btn_delete.setVisible(false);
@@ -2118,29 +2202,29 @@ public class JFrame extends javax.swing.JFrame {
                     boolean[] canEdit = new boolean[]{
                         false, false, false, false
                     };
-                    
+
                     public Class getColumnClass(int columnIndex) {
                         return types[columnIndex];
                     }
-                    
+
                     public boolean isCellEditable(int rowIndex, int columnIndex) {
                         return canEdit[columnIndex];
                     }
                 });
-                
+
                 model = (DefaultTableModel) table_list.getModel();
                 model.setRowCount(0);
-                
+
                 for (int i = 0; i < words.size(); i++) {
                     Object[] row = {words.get(i).getEnglish(), words.get(i).getTurkish(), words.get(i).getDate(), words.get(i).getForgotten_date()};
                     model.addRow(row);
                 }
-                
+
                 table_list.getColumnModel().getColumn(0).setPreferredWidth(300);
                 table_list.getColumnModel().getColumn(1).setPreferredWidth(300);
                 table_list.getColumnModel().getColumn(2).setPreferredWidth(100);
                 table_list.getColumnModel().getColumn(3).setPreferredWidth(100);
-                
+
             } else {
                 txt_search.setEditable(true);
                 btn_delete.setVisible(true);
@@ -2156,36 +2240,35 @@ public class JFrame extends javax.swing.JFrame {
                     boolean[] canEdit = new boolean[]{
                         false, false, false, false
                     };
-                    
+
                     public Class getColumnClass(int columnIndex) {
                         return types[columnIndex];
                     }
-                    
+
                     public boolean isCellEditable(int rowIndex, int columnIndex) {
                         return canEdit[columnIndex];
                     }
                 });
-                
+
                 model = (DefaultTableModel) table_list.getModel();
                 model.setRowCount(0);
-                
+
                 for (int i = 0; i < words.size(); i++) {
                     Object[] row = {words.get(i).getId(), words.get(i).getEnglish(), words.get(i).getTurkish(), words.get(i).getDate()};
                     model.addRow(row);
                 }
-                
+
                 table_list.getColumnModel().getColumn(0).setPreferredWidth(10);
                 table_list.getColumnModel().getColumn(1).setPreferredWidth(300);
                 table_list.getColumnModel().getColumn(2).setPreferredWidth(300);
                 table_list.getColumnModel().getColumn(3).setPreferredWidth(100);
-                
             }
-            
+
         } catch (Exception ex) {
             System.out.println("Error");
             System.out.println(ex.getMessage());
         }
-        
+
         if ((combo_table.getSelectedItem().toString().equals("Words") || combo_table.getSelectedItem().toString().equals("Learned")) && rowSelect == true) {
             if (index > 0) {
                 table_list.setRowSelectionInterval(index - 1, index - 1);
@@ -2195,11 +2278,10 @@ public class JFrame extends javax.swing.JFrame {
         } else {
             index = 0;
         }
-        
+
     }
     
     void update(String english, String turkish, int id) {
-        
         if (id == 0) {
             this.lbl_showAlert.setText("You did not choose.");
         } else if (english.length() == 0) {
@@ -2217,7 +2299,7 @@ public class JFrame extends javax.swing.JFrame {
             } finally {
                 index = table_list.getSelectedRow() + 1;
                 rowSelect = true;
-                
+
                 Refresh();
             }
         }
@@ -2236,7 +2318,6 @@ public class JFrame extends javax.swing.JFrame {
     }
     
     void getDate() {
-        String write = "";
         Date time = new Date();
         String[] timeSplit = time.toString().split(" ");
         
@@ -2318,85 +2399,25 @@ public class JFrame extends javax.swing.JFrame {
         lbl_dailyTurkish5.setText(daily.get(9));
         lbl_dailyTurkish5.setToolTipText(daily.get(9));
     }
-    
-    void resetUpdateElements() {
-        txt_english.setText("");
-        txt_ML.setText("");
-        lbl_id.setText("");
-    }
-    
-    void whileStarting() throws IOException, SQLException {
-        File f = new File("commands/whileStarting.txt");
-        File config = new File("commands/config.txt");
         
-        if (new File("DataBase").exists() == false) {
-            new SQLite().Create();
-            new SQLite().CreateTables();
-        }
+    void whileStarting() throws IOException, SQLException{
+        String StringDatabase = methods.getValue("database");
+        database = methods.getDataBase(StringDatabase);
+        System.out.println(StringDatabase);
         
-        if (f.exists() == false) {
-            new File("commands").mkdir();
-            f.createNewFile();
-            
-            BufferedWriter write = new BufferedWriter(new FileWriter("commands/whileStarting.txt"));
-            write.write("SQLite \n");
-            write.close();
-            
-            database = new SQLite();
-            
-        } else {
-            new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        Scanner read = new Scanner(f);
-                        String readed = read.next();
-                        if (readed.equals("MySQL") == true) {
-                            database = new MySQL();
-                        } else if (readed.equals("SQLite") == true) {
-                            database = new SQLite();
-                        }
-                        read.close();
-                        
-                    } catch (Exception exception) {
-                        System.out.println(exception.getMessage());
-                    }
-                }
-            }.start();
-        }
-        if (config.exists() == false) {
-            language = new turkish();
-            config.createNewFile();
-            setLocation(350, 150);
-        } else {
-            Scanner read = new Scanner(config);
-            String select = read.next();
-            
-            if (select.equals("German") == true) {
-                language = new german();
-                jComboLanguage.setSelectedIndex(1);
-            } else if (select.equals("French") == true) {
-                language = new french();
-                jComboLanguage.setSelectedIndex(3);
-            } else if (select.equals("Italian") == true) {
-                language = new italian();
-                jComboLanguage.setSelectedIndex(2);
-            } else {
-                language = new turkish();
-                jComboLanguage.setSelectedIndex(0);
-            }
-            
-            if(read.hasNext() == true){
-                int xx=read.nextInt();
-                int yy=read.nextInt();
-                setLocation(xx, yy);
-            }else{
-                setLocation(350, 175);
-            }
-            read.close();
-        }
+        String StringLanguage = methods.getValue("language");
+        language = methods.getLanguage(StringLanguage);
+        jComboLanguage.setSelectedIndex(language.getIndex());
+        
+        
+        int xx = Integer.valueOf(methods.getValue("xx"));
+        int yy = Integer.valueOf(methods.getValue("yy"));
+        setLocation(xx, yy);
+        
         label_ML.setText(language.getText() + " :");
+        jLabel22.setText(language.getText() + " :");
         jLabel7.setText("   " + language.getText() + " :");
+        
         
     }
     
@@ -2419,6 +2440,8 @@ public class JFrame extends javax.swing.JFrame {
     private javax.swing.JLabel Callandor;
     private javax.swing.JLabel add_icon;
     private javax.swing.JPanel bg;
+    private javax.swing.JPanel btnDelete;
+    private javax.swing.JPanel btnSave;
     private javax.swing.JPanel btn_addTo;
     private javax.swing.JPanel btn_apply;
     private javax.swing.JPanel btn_daily;
@@ -2433,8 +2456,10 @@ public class JFrame extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> combo_process;
     private javax.swing.JComboBox<String> combo_table;
     private javax.swing.JLabel daily_icon;
+    private javax.swing.JEditorPane detailAlert;
     private javax.swing.JLabel drag;
     private javax.swing.JLabel exit;
+    private javax.swing.JLabel exitDetails;
     private javax.swing.JComboBox<String> jComboLanguage;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -2449,6 +2474,10 @@ public class JFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -2462,9 +2491,13 @@ public class JFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel_show;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JEditorPane jTranslateText;
     private javax.swing.JLabel label_ML;
@@ -2493,6 +2526,8 @@ public class JFrame extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_today;
     private javax.swing.JLabel lbl_todayWord;
     private javax.swing.JLabel minimize;
+    private javax.swing.JTextField panelDeatilEnglish;
+    private javax.swing.JEditorPane panelDeatilPane;
     private javax.swing.JPanel panel_add;
     private javax.swing.JPanel panel_center;
     private javax.swing.JPanel panel_daily;
@@ -2507,6 +2542,7 @@ public class JFrame extends javax.swing.JFrame {
     private javax.swing.JPanel panel_dailyTurkish4;
     private javax.swing.JPanel panel_dailyTurkish5;
     private javax.swing.JPanel panel_date;
+    private javax.swing.JPanel panel_detail;
     private javax.swing.JPanel panel_settings;
     private javax.swing.JPanel panel_show;
     private javax.swing.JPanel panel_text;

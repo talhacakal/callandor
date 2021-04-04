@@ -1,5 +1,6 @@
 package Connection;
 
+import GUI.Methods;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,48 +23,16 @@ public class MySQL implements IDataBase {
     private ResultSet resultSet;
     private Statement statement;
     private BufferedWriter bw;
+    private Methods m=new Methods();
 
     public MySQL() {
         getComponents();
     }
 
     void getComponents() {
-        Scanner read = null;
-        try {
-            read = new Scanner(new File("commands/components.txt"));
-            dbUrl = "jdbc:mysql://" + read.nextLine() + ":" + read.nextLine() + "/english";
-            userName = read.nextLine();
-            password = read.nextLine();
-
-        } catch (Exception exception) {
-            System.out.println(exception.getMessage());
-        } finally {
-            read.close();
-        }
-    }
-
-    public void Create(String host, String port, String userName, String password) throws IOException {
-        File file = null;
-        try {
-            file = new File("commands/components.txt");
-
-            if (file.exists() == false) {
-                new File("commands").mkdir();
-                file.createNewFile();
-            }
-
-            bw = new BufferedWriter(new FileWriter(file));
-            bw.write(host + "\n");
-            bw.write(port + "\n");
-            bw.write(userName + "\n");
-            bw.write(password + "\n");
-
-        } catch (IOException exception) {
-            System.out.println(exception.getMessage());
-        } finally {
-            bw.close();
-        }
-
+        dbUrl = "jdbc:mysql://" + m.getValue("MySQL.Host") + ":" + m.getValue("MySQL.Port") + "/english";
+        userName = m.getValue("MySQL.Username");
+        password = m.getValue("MySQL.Password");
     }
 
     public boolean isValid(String host, String port, String userName, String password) {
@@ -87,7 +56,7 @@ public class MySQL implements IDataBase {
             sql = "CREATE TABLE `english`.`words` (\n"
                     + "  `Id` INT NOT NULL AUTO_INCREMENT,\n"
                     + "  `english` VARCHAR(50) NOT NULL,\n"
-                    + "  `turkish` VARCHAR(50) NOT NULL,\n"
+                    + "  `turkish` VARCHAR(10000) NOT NULL,\n"
                     + "  `forgotten` INT NOT NULL DEFAULT '0',\n"
                     + "  `date_of_addition` DATETIME NULL DEFAULT NULL,\n"
                     + "  PRIMARY KEY (`Id`),\n"
@@ -121,7 +90,8 @@ public class MySQL implements IDataBase {
             if (exception.getErrorCode() == 0) {
             } else if (exception.getErrorCode() == 1007) {
             } else {
-                showError(exception);
+                System.out.println("Error : " + exception.getMessage());
+                System.out.println("Error Code : " + exception.getErrorCode());
             }
         } finally {
             connection.close();
@@ -158,12 +128,12 @@ public class MySQL implements IDataBase {
         } catch (SQLException exception) {
             if (exception.getErrorCode() == 1062) {
                 back = "This word already added.";
-                increaseForgotten(english);
                 insertFD(english);
             } else if (exception.getErrorCode() == 1406) {
                 back = "Data too long.";
             } else {
-                showError(exception);
+                System.out.println("Error : " + exception.getMessage());
+                System.out.println("Error Code : " + exception.getErrorCode());
                 back = exception.getMessage();
             }
         } finally {
@@ -172,12 +142,6 @@ public class MySQL implements IDataBase {
             }
             return back;
         }
-    }
-
-    @Override
-    public void showError(SQLException exception) {
-        System.out.println("Error : " + exception.getMessage());
-        System.out.println("Error Code : " + exception.getErrorCode());
     }
 
     @Override
@@ -212,7 +176,8 @@ public class MySQL implements IDataBase {
             }
 
         } catch (SQLException exception) {
-            showError(exception);
+            System.out.println("Error : " + exception.getMessage());
+            System.out.println("Error Code : " + exception.getErrorCode());
         } finally {
             statement.close();
             resultSet.close();
@@ -222,16 +187,17 @@ public class MySQL implements IDataBase {
     }
 
     @Override
-    public String delete(String database, int Id) throws SQLException {
+    public String delete(String table, int Id) throws SQLException {
         String back = null;
         try {
-            String sql = "DELETE FROM `" + database + "` WHERE (`Id` = '" + Id + "');";
+            String sql = "DELETE FROM `" + table + "` WHERE (`Id` = '" + Id + "');";
             statement = getConnection().createStatement();
             statement.execute(sql);
             back = "Deleted";
         } catch (SQLException exception) {
-            showError(exception);
-            back = "Could not be deleted.";
+            System.out.println("Error : " + exception.getMessage());
+            System.out.println("Error Code : " + exception.getErrorCode());
+            back = "Could not deleted.";
         } finally {
             statement.close();
             return back;
@@ -239,13 +205,14 @@ public class MySQL implements IDataBase {
     }
 
     @Override
-    public void update(String database, String english, String turkish, int id) throws SQLException {
+    public void update(String table, String english, String turkish, int id) throws SQLException {
         try {
             statement = getConnection().createStatement();
-            String sql = "UPDATE `" + database + "` SET `english` = '" + english + "',`turkish` = '" + turkish + "' WHERE (`Id` = '" + id + "');";
+            String sql = "UPDATE `" + table + "` SET `english` = '" + english + "',`turkish` = '" + turkish + "' WHERE (`Id` = '" + id + "');";
             statement.execute(sql);
         } catch (SQLException exception) {
-            showError(exception);
+            System.out.println("Error : " + exception.getMessage());
+            System.out.println("Error Code : " + exception.getErrorCode());
         } finally {
             statement.close();
         }
@@ -261,7 +228,8 @@ public class MySQL implements IDataBase {
 
             delete(from, id);
         } catch (SQLException exception) {
-            showError(exception);
+            System.out.println("Error : " + exception.getMessage());
+            System.out.println("Error Code : " + exception.getErrorCode());
         } finally {
             statement.close();
         }
@@ -280,7 +248,6 @@ public class MySQL implements IDataBase {
             } else {
                 sql = "SELECT * FROM " + table + " WHERE english LIKE '%" + likeSQL + "%'";
             }
-
             resultSet = statement.executeQuery(sql);
 
             if (table == "words") {
@@ -298,7 +265,8 @@ public class MySQL implements IDataBase {
             }
 
         } catch (SQLException exception) {
-            showError(exception);
+            System.out.println("Error : " + exception.getMessage());
+            System.out.println("Error Code : " + exception.getErrorCode());
         } finally {
             statement.close();
             resultSet.close();
@@ -325,8 +293,8 @@ public class MySQL implements IDataBase {
                 dailyWords.add(words.get(i % (words.size())).getEnglish());
                 dailyWords.add(words.get(i % (words.size())).getTurkish());
             }
-            new File("commands/daily/words.txt").delete();
-            new File("commands/daily/components.txt").delete();
+            new File("components/daily/words.txt").delete();
+            new File("components/daily/components.txt").delete();
             return dailyWords;
         } else if (components.get(0) == date.getDate()) {
             return dailyWords;
@@ -366,29 +334,10 @@ public class MySQL implements IDataBase {
             statement = getConnection().createStatement();
             resultSet = statement.executeQuery(sql);
         } catch (SQLException exception) {
-            showError(exception);
+            System.out.println("Error : " + exception.getMessage());
+            System.out.println("Error Code : " + exception.getErrorCode());
         }
         return resultSet;
-    }
-
-    public void increaseForgotten(String english) throws SQLException {
-        try {
-            resultSet = execute("SELECT forgotten FROM words WHERE (english='" + english + "');");
-            resultSet.next();
-
-            String sql = "UPDATE words SET forgotten=? WHERE english=?";
-            preparedStatement = getConnection().prepareStatement(sql);
-            preparedStatement.setInt(1, (resultSet.getInt(1) + 1));
-            preparedStatement.setString(2, english);
-            preparedStatement.execute();
-
-        } catch (SQLException exception) {
-            showError(exception);
-        } finally {
-            preparedStatement.close();
-            resultSet.close();
-        }
-
     }
 
     public void insertFD(String english) throws SQLException {
@@ -402,7 +351,8 @@ public class MySQL implements IDataBase {
             preparedStatement.setDate(2, (java.sql.Date) getDate());
             preparedStatement.execute();
         } catch (SQLException exception) {
-            showError(exception);
+            System.out.println("Error : " + exception.getMessage());
+            System.out.println("Error Code : " + exception.getErrorCode());
         } finally {
             preparedStatement.close();
             resultSet.close();
@@ -425,7 +375,8 @@ public class MySQL implements IDataBase {
             preparedStatement = getConnection().prepareStatement(sql);
             preparedStatement.execute();
         } catch (SQLException exception) {
-            showError(exception);
+            System.out.println("Error : " + exception.getMessage());
+            System.out.println("Error Code : " + exception.getErrorCode());
         } finally {
             preparedStatement.close();
             resultSet.close();
@@ -446,7 +397,7 @@ public class MySQL implements IDataBase {
 
     public void writeToday(ArrayList<String> dailyWords) throws IOException {
         try {
-            bw = new BufferedWriter(new FileWriter("commands/daily/words.txt"));
+            bw = new BufferedWriter(new FileWriter("components/daily/words.txt"));
             for (int i = 0; i < dailyWords.size(); i++) {
                 bw.write(String.valueOf(dailyWords.get(i)) + "\n");
             }
@@ -460,7 +411,7 @@ public class MySQL implements IDataBase {
     public void write(ArrayList<Integer> list) throws IOException {
         BufferedWriter bw = null;
         try {
-            bw = new BufferedWriter(new FileWriter("commands/daily/components.txt"));
+            bw = new BufferedWriter(new FileWriter("components/daily/components.txt"));
             for (int i = 0; i < list.size(); i++) {
                 bw.write(String.valueOf(list.get(i)) + "\n");
             }
@@ -477,9 +428,9 @@ public class MySQL implements IDataBase {
         Scanner s = null;
 
         try {
-            f = new File("commands/daily/components.txt");
+            f = new File("components/daily/components.txt");
             if (f.exists() == false) {
-                new File("commands/daily").mkdir();
+                new File("components/daily").mkdir();
                 f.createNewFile();
                 FileWriter write = new FileWriter(f);
                 write.write(String.valueOf(0) + "\n");
@@ -501,7 +452,7 @@ public class MySQL implements IDataBase {
 
     public ArrayList<String> readToday() throws IOException {
         ArrayList<String> today = new ArrayList<>();
-        File f = new File("commands/daily/words.txt");
+        File f = new File("components/daily/words.txt");
         Scanner read = null;
         try {
             if (f.exists() == false) {

@@ -18,14 +18,15 @@ public class SQLite implements IDataBase {
     }
 
     public void Create() throws IOException, SQLException {
-        File folder = new File("DataBase");
-        File database = new File("DataBase/english.db");
+        File folder = new File("components");
+        File database = new File("components/english.db");
 
         if (folder.exists() == false) {
             folder.mkdir();
         }
         if (database.exists() == false) {
             database.createNewFile();
+           
         }
 
         this.url = "jdbc:sqlite:" + database.getCanonicalPath();
@@ -43,7 +44,7 @@ public class SQLite implements IDataBase {
                     + "\t\"date_of_addition\"\tTEXT DEFAULT NULL,\n"
                     + "\tPRIMARY KEY(\"Id\" AUTOINCREMENT)\n"
                     + ");");
-            System.out.println("Words tablosu eklendi");
+            System.out.println("Words table added.");
 
             statement.execute("CREATE TABLE \"learned\" (\n"
                     + "\t\"Id\"\tINTEGER NOT NULL UNIQUE,\n"
@@ -52,7 +53,7 @@ public class SQLite implements IDataBase {
                     + "\t\"date_of_addition\"\tTEXT DEFAULT NULL,\n"
                     + "\tPRIMARY KEY(\"Id\" AUTOINCREMENT)\n"
                     + ");");
-            System.out.println("learned tablosu eklendi");
+            System.out.println("Learned table added.");
 
             statement.execute("CREATE TABLE \"forgotten_date\" (\n"
                     + "\t\"Id\"\tINTEGER NOT NULL,\n"
@@ -60,11 +61,12 @@ public class SQLite implements IDataBase {
                     + "\t\"forgotten_date\"\tTEXT DEFAULT NULL,\n"
                     + "\tPRIMARY KEY(\"Id\" AUTOINCREMENT)\n"
                     + ");");
-            System.out.println("Forgotten tablosu eklendi");
+            System.out.println("Forgotten table added.");
 
         } catch (SQLException exception) {
-            System.out.println("Error!");
-            System.out.println(exception.getMessage());
+            System.out.println("Error : " + exception.getMessage());
+            System.out.println("Error Code : " + exception.getErrorCode());
+            
         } finally {
             connection.close();
             statement.close();
@@ -77,8 +79,7 @@ public class SQLite implements IDataBase {
         boolean already = false;
         try {
             resultSet = execute("SELECT * FROM learned WHERE english=\"" + english + "\";");
-            if (resultSet.next() == true) {
-
+            if (resultSet.next() == true ) {
                 int Id = resultSet.getInt("Id");
                 String date = resultSet.getString("date_of_addition");
 
@@ -102,12 +103,11 @@ public class SQLite implements IDataBase {
         } catch (SQLException exception) {
             if (exception.getErrorCode() == 19) {
                 back = "This word already added.";
-                increaseForgotten(english);
                 addForgot(getId(english));
             } else {
-                System.out.println("Hata");
-                System.out.println(exception.getMessage());
-                System.out.println("Hata kodu " + exception.getErrorCode());
+                System.out.println("Error : " + exception.getMessage());
+                System.out.println("Error Code : " + exception.getErrorCode());
+                
             }
         } finally {
             if (already == false) {
@@ -118,12 +118,6 @@ public class SQLite implements IDataBase {
             }
             return back;
         }
-    }
-
-    @Override
-    public void showError(SQLException exception) {
-        System.out.println("Error : " + exception.getMessage());
-        System.out.println("Error Code : " + exception.getErrorCode());
     }
 
     @Override
@@ -157,8 +151,8 @@ public class SQLite implements IDataBase {
             }
 
         } catch (SQLException exception) {
-            System.out.println(exception.getMessage());
-            System.out.println(exception.getErrorCode());
+            System.out.println("Error : " + exception.getMessage());
+            System.out.println("Error Code : " + exception.getErrorCode());
         } finally {
             connection.close();
             resultSet.close();
@@ -176,8 +170,8 @@ public class SQLite implements IDataBase {
             statement.execute(sql);
             back = "Deleted.";
         } catch (SQLException exception) {
-            System.out.println(exception.getMessage());
-            System.out.println(exception.getErrorCode());
+            System.out.println("Error : " + exception.getMessage());
+            System.out.println("Error Code : " + exception.getErrorCode());
             back = "Could not be deleted.";
         } finally {
             connection.close();
@@ -195,8 +189,8 @@ public class SQLite implements IDataBase {
             String sql = "UPDATE `" + database + "` SET `english` = '" + english + "',`turkish` = '" + turkish + "' WHERE (`Id` = '" + id + "');";
             statement.execute(sql);
         } catch (SQLException exception) {
-            System.out.println(exception.getMessage());
-            System.out.println(exception.getErrorCode());
+            System.out.println("Error : " + exception.getMessage());
+            System.out.println("Error Code : " + exception.getErrorCode());
         } finally {
             connection.close();
             statement.close();
@@ -213,8 +207,8 @@ public class SQLite implements IDataBase {
             statement.execute(insertSql);
 
         } catch (SQLException exception) {
-            System.out.println(exception.getMessage());
-            System.out.println(exception.getErrorCode());
+            System.out.println("Error : " + exception.getMessage());
+            System.out.println("Error Code : " + exception.getErrorCode());
         } finally {
             connection.close();
             statement.close();
@@ -254,8 +248,8 @@ public class SQLite implements IDataBase {
                 }
             }
         } catch (SQLException exception) {
-            System.out.println(exception.getMessage());
-            System.out.println(exception.getErrorCode());
+            System.out.println("Error : " + exception.getMessage());
+            System.out.println("Error Code : " + exception.getErrorCode());
         } finally {
             connection.close();
             statement.close();
@@ -283,8 +277,8 @@ public class SQLite implements IDataBase {
                 dailyWords.add(words.get(i % (words.size())).getEnglish());
                 dailyWords.add(words.get(i % (words.size())).getTurkish());
             }
-            new File("commands/daily/words.txt").delete();
-            new File("commands/daily/components.txt").delete();
+            new File("components/daily/words.txt").delete();
+            new File("components/daily/components.txt").delete();
             return dailyWords;
         } else if (components.get(0) == date.getDate()) {
             return dailyWords;
@@ -326,33 +320,13 @@ public class SQLite implements IDataBase {
             preparedStatement.setString(2, getDate().toString());
             preparedStatement.execute();
         } catch (SQLException exception) {
-            System.out.println(exception.getMessage());
+            System.out.println("Error : " + exception.getMessage());
+            System.out.println("Error Code : " + exception.getErrorCode());
         } finally {
             connection.close();
             preparedStatement.close();
         }
 
-    }
-
-    public void increaseForgotten(String english) throws SQLException {
-        try {
-            connection = DriverManager.getConnection(url);
-            resultSet = execute("SELECT forgotten FROM words WHERE (\"english\"=\"" + english + "\");");
-            resultSet.next();
-            int forgotten = resultSet.getInt("forgotten");
-            resultSet.close();
-            forgotten += 1;
-
-            preparedStatement = connection.prepareStatement("UPDATE words SET \"forgotten\" = " + forgotten + " WHERE (\"english\" = \"" + english + "\");");
-            preparedStatement.execute();
-
-        } catch (SQLException exception) {
-            System.out.println(exception.getMessage());
-            System.out.println(exception.getErrorCode());
-        } finally {
-            connection.close();
-            preparedStatement.close();
-        }
     }
 
     public void AddLearned(String english) throws SQLException {
@@ -367,9 +341,8 @@ public class SQLite implements IDataBase {
             System.out.println(rs.getInt("Id"));
 
         } catch (SQLException exception) {
-            System.out.println("Hata");
-            System.out.println(exception.getMessage());
-            System.out.println("Hata kodu " + exception.getErrorCode());
+            System.out.println("Error : " + exception.getMessage());
+            System.out.println("Error Code : " + exception.getErrorCode());
         } finally {
             connection.close();
             preparedStatement.close();
@@ -382,7 +355,8 @@ public class SQLite implements IDataBase {
             resultSet = statement.executeQuery(sql);
 
         } catch (SQLException exception) {
-            System.out.println(exception.getMessage());
+            System.out.println("Error : " + exception.getMessage());
+            System.out.println("Error Code : " + exception.getErrorCode());
         }
         return resultSet;
     }
@@ -396,7 +370,8 @@ public class SQLite implements IDataBase {
             resultSet.next();
             return resultSet.getInt("Id");
         } catch (SQLException exception) {
-            System.out.println(exception.getMessage());
+            System.out.println("Error : " + exception.getMessage());
+            System.out.println("Error Code : " + exception.getErrorCode());
         } finally {
             connection.close();
             statement.close();
@@ -420,7 +395,7 @@ public class SQLite implements IDataBase {
     public void writeToday(ArrayList<String> dailyWords) throws IOException {
         BufferedWriter bw = null;
         try {
-            bw = new BufferedWriter(new FileWriter("commands/daily/words.txt"));
+            bw = new BufferedWriter(new FileWriter("components/daily/words.txt"));
             for (int i = 0; i < dailyWords.size(); i++) {
                 bw.write(String.valueOf(dailyWords.get(i)) + "\n");
             }
@@ -434,7 +409,7 @@ public class SQLite implements IDataBase {
     public void write(ArrayList<Integer> list) throws IOException {
         BufferedWriter bw = null;
         try {
-            bw = new BufferedWriter(new FileWriter("commands/daily/components.txt"));
+            bw = new BufferedWriter(new FileWriter("components/daily/components.txt"));
             for (int i = 0; i < list.size(); i++) {
                 bw.write(String.valueOf(list.get(i)) + "\n");
             }
@@ -451,9 +426,9 @@ public class SQLite implements IDataBase {
         Scanner s = null;
 
         try {
-            f = new File("commands/daily/components.txt");
+            f = new File("components/daily/components.txt");
             if (f.exists() == false) {
-                new File("commands/daily").mkdir();
+                new File("components/daily").mkdir();
                 f.createNewFile();
                 FileWriter write = new FileWriter(f);
                 write.write(String.valueOf(0) + "\n");
@@ -475,7 +450,7 @@ public class SQLite implements IDataBase {
 
     public ArrayList<String> readToday() throws IOException {
         ArrayList<String> today = new ArrayList<>();
-        File f = new File("commands/daily/words.txt");
+        File f = new File("components/daily/words.txt");
         Scanner read = null;
         try {
             if (f.exists() == false) {
